@@ -49,6 +49,7 @@ function getHeaders(sheet) {
 function setRowValues(sheet, rowNum, info) {
   let headers = getHeaders(sheet);
   headers.forEach((header, index) => {
+      Logger.log(index);
     if (info[header]) {
       var cell = numToSSColumn(index) + rowNum;
       sheet.getRange(cell).setValue(info[header]);
