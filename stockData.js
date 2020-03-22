@@ -3,7 +3,6 @@ function updateSelectedStocks() {
 }
 
 function updateStocks(selectedOnly) {
-  // TODO pull Row1 headings, so this can be run in any sheet with tickers in ColA
   var sheet = SpreadsheetApp.getActiveSheet();
   var date = new Date(Date.now()).toLocaleString().split(",")[0];
   var activeRangeList = sheet.getActiveRangeList();
@@ -16,10 +15,7 @@ function updateStocks(selectedOnly) {
       var rowNum = range.getRow();
       var ticker = sheet.getRange(`A${rowNum}`).getValue();
       let info = getStockInfo(ticker);
-      let values = Object.values(info);
-      values.unshift(date);
-
-      setRowValues(sheet, rowNum, values);
+      setRowValues(sheet, rowNum, info);
     });
   } else {
     // batch update everything
@@ -33,27 +29,35 @@ function updateStocks(selectedOnly) {
       .forEach((ticker, index) => {
         let rowNum = index + startRow;
         let info = getStockInfo(ticker);
-        let values = Object.values(info);
-        values.unshift(date);
-
-        setRowValues(sheet, rowNum, values);
+        setRowValues(sheet, rowNum, info);
       });
   }
 }
+
 function setHeaders(sheet, headers) {
   var sampleInfo = getStockInfo("AAPL");
   var headers = Object.keys(sampleInfo);
   headers.unshift("Last Updated");
   setRowValues(sheet, 1, headers);
 }
-function setRowValues(sheet, rowNum, values) {
-  var firstIndex = 6;
-  var firstCell = numToSSColumn(firstIndex) + rowNum;
-  var lastCell = numToSSColumn(firstIndex + values.length - 1) + rowNum;
 
-  Logger.log(values);
-  sheet.getRange(`${firstCell}:${lastCell}`).setValues([values]);
+function getHeaders(sheet) {
+  return sheet.getRange(`A1:ZZ1`).getValues()[0];
+  // .filter(value => !!value); // TODO, might mess up indexes
 }
+
+function setRowValues(sheet, rowNum, info) {
+  let headers = getHeaders(sheet);
+  headers.forEach(header => {
+    if (info[header]) {
+      var cell = numToSSColumn(index) + rowNum;
+      sheet.getRange(cell).setValue(info[header]);
+    }
+  });
+
+  //   sheet.getRange(`${firstCell}:${lastCell}`).setValues([values]);
+}
+
 function getStockInfo(ticker) {
   var info = {};
   var url = "https://finviz.com/quote.ashx?t=" + ticker;
