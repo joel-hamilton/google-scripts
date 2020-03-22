@@ -50,12 +50,10 @@ function setRowValues(sheet, rowNum, info) {
   let headers = getHeaders(sheet);
   headers.forEach((header, index) => {
     if (Object.keys(info).includes(header)) {
-      var cell = numToSSColumn(index) + rowNum;
+      var cell = numToSSColumn(index + 1) + rowNum;
       sheet.getRange(cell).setValue(info[header]);
     }
   });
-
-  //   sheet.getRange(`${firstCell}:${lastCell}`).setValues([values]);
 }
 
 function getStockInfo(ticker) {
