@@ -1,4 +1,4 @@
-var stocks = {
+{
   updateSelectedStocks: function() {
     updateStocks(true);
   },
