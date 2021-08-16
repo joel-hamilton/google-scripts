@@ -1,4 +1,4 @@
-Stock Data
+# Stock Data
 
 This script updates a Google Sheets spreadsheet with stock ticker info from finviz.com. Options are 'Update Selected Stocks', and 'Update All Stocks'.
 
