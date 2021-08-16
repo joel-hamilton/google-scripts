@@ -1,0 +1,21 @@
+let scriptUrl = "https://raw.githubusercontent.com/joelhamilton5/google-scripts/master/stock-data/stock-data.js";
+
+function onOpen() {
+  let ss = SpreadsheetApp.getActiveSpreadsheet();
+  let menuEntries = [{ name: "Update All Stocks", functionName: "updateStocks" },{ name: "Update Selected Stocks", functionName: "updateSelectedStocks" }];
+  ss.addMenu("Finance", menuEntries);
+}
+
+function evalAnd(callbackName) {
+  let script = UrlFetchApp.fetch(scriptUrl).getContentText();
+  eval(script);
+  eval(callbackName + "()");
+}
+
+function updateSelectedStocks() {
+  evalAnd("updateSelectedStocks");
+}
+
+function updateStocks() {
+  evalAnd("updateStocks");
+}

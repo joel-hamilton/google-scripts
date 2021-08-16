@@ -2,9 +2,8 @@ function updateSelectedStocks() {
   updateStocks(true);
 }
 
-function updateStocks(selectedOnly) {
+function updateStocks(selectedOnly = false) {
   var sheet = SpreadsheetApp.getActiveSheet();
-  var date = new Date(Date.now()).toLocaleString().split(",")[0];
   var activeRangeList = sheet.getActiveRangeList();
   var tickers;
 
@@ -43,7 +42,6 @@ function setHeaders(sheet, headers) {
 
 function getHeaders(sheet) {
   return sheet.getRange(`A1:ZZ1`).getValues()[0];
-  // .filter(value => !!value); // TODO, might mess up indexes
 }
 
 function setRowValues(sheet, rowNum, info) {
@@ -72,6 +70,7 @@ function getStockInfo(ticker) {
 
   return info;
 }
+
 function numToSSColumn(num) {
   var s = "",
     t;
