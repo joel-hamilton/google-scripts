@@ -10,7 +10,7 @@ function updateStocks(selectedOnly = false) {
   if (activeRangeList && selectedOnly) {
     // only updating selected lines
     let ranges = activeRangeList.getRanges();
-    ranges.forEach(range => {
+    ranges.forEach((range) => {
       var rowNum = range.getRow();
       var ticker = sheet.getRange(`A${rowNum}`).getValue();
       let info = getStockInfo(ticker);
@@ -23,8 +23,8 @@ function updateStocks(selectedOnly = false) {
     var tickers = sheet.getRange(`A${startRow}:D500`).getValues();
 
     tickers
-      .filter(arr => arr.length)
-      .map(item => item[0])
+      .filter((arr) => arr.length)
+      .map((item) => item[0])
       .forEach((ticker, index) => {
         let rowNum = index + startRow;
         let info = getStockInfo(ticker);
@@ -62,13 +62,31 @@ function getStockInfo(ticker) {
   var html = res.getContentText();
   var $ = Cheerio.load(html);
 
-  $(".snapshot-table2 .snapshot-td2-cp").each(function() {
-    info[$(this).text()] = $(this)
-      .next()
-      .text();
+  $(".snapshot-table2 .snapshot-td2-cp").each(function () {
+    var field = $(this).text();
+    var value = $(this).next().text();
+    info[field] = parseValue(value);
   });
 
   return info;
+}
+
+function parseValue(rawValue) {
+  // if value ends in M or B, convert to millions or billions
+  if (rawValue.substring(rawValue.length - 1) === "M") {
+    return parseFloat(rawValue.substring(0, rawValue.length - 1)) * 1000 * 1000;
+  }
+
+  if (rawValue.substring(rawValue.length - 1) === "B") {
+    return (
+      parseFloat(rawValue.substring(0, rawValue.length - 1)) *
+      1000 *
+      1000 *
+      1000
+    );
+  }
+
+  return rawValue;
 }
 
 function numToSSColumn(num) {
