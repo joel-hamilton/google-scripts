@@ -54,6 +54,7 @@ function setRowValues(sheet, rowNum, info) {
   });
 }
 
+// get all stock info from page table, and also the name (added as 'name' field)
 function getStockInfo(ticker) {
   var info = {};
   var url = "https://finviz.com/quote.ashx?t=" + ticker;
@@ -61,6 +62,8 @@ function getStockInfo(ticker) {
   var res = UrlFetchApp.fetch(url, { muteHttpExceptions: true });
   var html = res.getContentText();
   var $ = Cheerio.load(html);
+
+  info.Name = $('.fullview-title b').text();
 
   $(".snapshot-table2 .snapshot-td2-cp").each(function () {
     var field = $(this).text();
